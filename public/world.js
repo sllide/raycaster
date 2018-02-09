@@ -1,22 +1,37 @@
 class World {
-  constructor() {
-    this.objects = [];
+  constructor(width, height) {
+    this.width = width;
+    this.height = height;
+    this.grid = new Array(width);
+    for(var i=0;i<width;i++){
+      this.grid[i] = new Array(height);
+    }
   }
 
-  addBoundaries(width, height, size) {
-    this.addBox(0,0,width,size,'red');
-    this.addBox(0,0,size,height,'red');
-    this.addBox(0,height-size,width,size,'red');
-    this.addBox(width-size,0,size,height,'red');
+  addBoundaries() {
+    var y = 0;
+    while(y<this.height) {
+      var x = 0;
+      while(x<this.width) {
+        if(y==0||y==this.height-1) {
+          this.addBox(x++,y,'red');
+        } else {
+          this.addBox(0,y,'red');
+          this.addBox(this.width-1,y,'red');
+          break;
+        }
+      }
+      y++;
+    }
   }
 
-  addBox(x,y,w,h,c) {
-    this.objects.push({type:'box',x:x,y:y,w:w,h:h,c:c});
+  addBox(x,y,c) {
+    this.grid[x][y] = ({type:'wall',x:x,y:y,c:c});
   }
 
   registerObserver(observer) {
-    this.objects.push(observer);
+    this.observer = observer;
   }
-
-  getObjects() {return this.objects;}
+  getObserver() {return this.observer;}
+  getGrid() {return this.grid;}
 }

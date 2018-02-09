@@ -8,6 +8,7 @@ class Tracer {
   }
 
   render() {
+    return;
     for(var y=0;y<this.height;y++){
       for(var x=0;x<this.width;x++){
         this.renderPixel(x,y);

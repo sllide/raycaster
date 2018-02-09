@@ -3,26 +3,35 @@
   <script src='minimap.js'></script>
   <script src='tracer.js'></script>
   <script src='observer.js'></script>
+  <script src='vector.js'></script>
+  <script src='keyboard.js'></script>
 
   <script>
-    let width = 200;
-    let height = 200;
+    let worldWidth = 64;
+    let worldHeight = 64;
+    let width = worldWidth * 4;
+    let height = worldHeight * 4;
     
 
-    world = new World();
-    world.addBoundaries(width,height,5);
-    world.addBox(10,10,5,5,'red');
-    world.addBox(100,100,20,10,'blue');
+    world = new World(worldWidth, worldHeight);
+    world.addBoundaries();
 
-    observer = new Observer(width/2,height/2);
+    world.addBox(10, 10, 'yellow');
+    world.addBox(60, 40, 'pink');
+    world.addBox(20, 50, 'purple');
+    world.addBox(30, 30, 'orange');
+
+    observer = new Observer(width/2, height/2);
     world.registerObserver(observer);
-    
+    keyboard = new Keyboard();
+    keyboard.hook(observer); 
     tracer = new Tracer(width, height);
-    tracer.render(world.getObjects());
+    tracer.render(world);
 
 
-    miniMap = new MiniMap(width, height);
-    miniMap.draw(world.getObjects());
+    miniMap = new MiniMap(width, height, world);
+    miniMap.draw();
+    keyboard.hook(miniMap);
 
     document.body.append(tracer.getDom());
     document.body.append(miniMap.getDom());
