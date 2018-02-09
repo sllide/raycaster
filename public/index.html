@@ -1,0 +1,31 @@
+<body>
+  <script src='world.js'></script>
+  <script src='minimap.js'></script>
+  <script src='tracer.js'></script>
+  <script src='observer.js'></script>
+
+  <script>
+    let width = 200;
+    let height = 200;
+    
+
+    world = new World();
+    world.addBoundaries(width,height,5);
+    world.addBox(10,10,5,5,'red');
+    world.addBox(100,100,20,10,'blue');
+
+    observer = new Observer(width/2,height/2);
+    world.registerObserver(observer);
+    
+    tracer = new Tracer(width, height);
+    tracer.render(world.getObjects());
+
+
+    miniMap = new MiniMap(width, height);
+    miniMap.draw(world.getObjects());
+
+    document.body.append(tracer.getDom());
+    document.body.append(miniMap.getDom());
+  </script>
+
+</body>
