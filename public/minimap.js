@@ -40,18 +40,18 @@ class MiniMap {
     var observer = this.world.getObserver();
     var pos = observer.getPos();
     var size = observer.getSize();
-    var rotation = observer.getRotation();
+    var direction = observer.getDir();
 
     this.c2d.fillStyle = 'white';
     this.c2d.beginPath();
-    this.c2d.arc(pos.x,pos.y,size,0,2*Math.PI);
+    this.c2d.arc(pos.x*8,pos.y*8,size,0,2*Math.PI);
     this.c2d.fill();
     
     this.c2d.strokeStyle = 'white';
     this.c2d.lineWidth = 2;
     this.c2d.beginPath();
-    this.c2d.moveTo(pos.x, pos.y);
-    this.c2d.lineTo(pos.x + (Math.sin(rotation / 180 * Math.PI)*10),pos.y + (Math.cos(rotation / 180 * Math.PI)*10));
+    this.c2d.moveTo(pos.x*8, pos.y*8);
+    this.c2d.lineTo(pos.x*8 + direction.x*10,pos.y*8 + direction.y*10);
     this.c2d.stroke();
   }
 

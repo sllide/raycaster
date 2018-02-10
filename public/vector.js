@@ -29,5 +29,6 @@ class Vector2D {
     this.y *= val;
   
   }
+  clone() {return new Vector2D(this.x,this.y)};
   getSum(){return this.x + this.y;}
 }

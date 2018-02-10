@@ -60,7 +60,7 @@ class Tracer {
     if(side == 0) perpWallDistance = (map.x - pos.x + (1-stepX) / 2) / rayDir.x;
     else          perpWallDistance = (map.y - pos.x + (1-stepY) / 2) / rayDir.y;
 
-    this.renderLine(x, perpWallDistance*50, cell.c);
+    this.renderLine(x, perpWallDistance*CONF.distMult, cell.c);
     return true;
   }
 

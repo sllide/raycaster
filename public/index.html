@@ -8,6 +8,10 @@
   <script src='loop.js'></script>
 
   <script>
+    class CONF{};
+    CONF.distMult = 5;
+
+
     let worldWidth = 32;
     let worldHeight = 32;
     let width = worldWidth * 8;
@@ -24,7 +28,7 @@
     world.addBox(20, 30, 'purple');
     world.addBox(30, 30, 'orange');
 
-    observer = new Observer(worldWidth/2-.5, worldHeight/2-.5);
+    observer = new Observer(worldWidth/2-.5-5, worldHeight/2-.5+5);
     world.registerObserver(observer);
     keyboard = new Keyboard();
     tracer = new Tracer(viewWidth, viewHeight, world);
@@ -34,21 +38,15 @@
     document.body.append(miniMap.getDom());
 
 
-    function gameLoop() {
+    function loop() {
       world.step();
       miniMap.render();
-    }
-   
-    function renderLoop() {
       tracer.render();
     }
-
-    gameLooper = new Loop(60); 
-    gameLooper.registerCallback(gameLoop);
-    gameLooper.run();
-    renderLooper = new Loop(10); 
-    renderLooper.registerCallback(renderLoop);
-    renderLooper.run();
+   
+    looper = new Loop(10); 
+    looper.registerCallback(loop);
+    looper.run();
   </script>
 
 </body>
