@@ -60,12 +60,12 @@ class Tracer {
     if(side == 0) perpWallDistance = (map.x - pos.x + (1-stepX) / 2) / rayDir.x;
     else          perpWallDistance = (map.y - pos.x + (1-stepY) / 2) / rayDir.y;
 
-    this.renderLine(x, perpWallDistance*50);
+    this.renderLine(x, perpWallDistance*50, cell.c);
     return true;
   }
 
-  renderLine(x, distance) {
-    this.c2d.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+  renderLine(x, distance, color) {
+    this.c2d.fillStyle = color;
     var y = distance/2;
     var h = this.height-distance;
     this.c2d.fillRect(x,y,1,h);
