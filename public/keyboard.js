@@ -1,21 +1,25 @@
 class Keyboard {
 
   constructor() {
-    this.hooks = new Array();
     document.addEventListener("keydown", (e) => this.handlePress(e));
+    document.addEventListener("keyup", (e) => this.handleRelease(e));
   }
 
 
   handlePress(e) {
-    for(var i=0;i<this.hooks.length;i++) {
-      this.hooks[i].press(e.keyCode);
-    }
+    Keyboard.keys[e.keyCode] = true;
   }
 
-  hook(obj) {
-    this.hooks.push(obj);
+  handleRelease(e) {
+    Keyboard.keys[e.keyCode] = false;
+  }
+
+  static isPressed(key) {
+    return Keyboard.keys[key];
   }
 }
+
+Keyboard.keys = new Array();
 
 Keyboard.UP = 38;
 Keyboard.DOWN = 40;

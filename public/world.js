@@ -26,12 +26,27 @@ class World {
   }
 
   addBox(x,y,c) {
-    this.grid[x][y] = ({type:'wall',x:x,y:y,c:c});
+    this.grid[x][y] = ({type:'wall',c:c});
   }
 
   registerObserver(observer) {
     this.observer = observer;
   }
+  
+  step() {
+    observer.update();
+  }
+
+  getCell(x,y) {
+    if(x<0||x>this.width||y<0||y>this.height) {
+      return {type:'invalid'};
+    }
+    if(typeof this.grid[x][y] === 'undefined') {
+      return {type:'empty'};
+    }
+    return this.grid[x][y];
+  }
+
   getObserver() {return this.observer;}
   getGrid() {return this.grid;}
 }

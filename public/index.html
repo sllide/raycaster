@@ -5,36 +5,50 @@
   <script src='observer.js'></script>
   <script src='vector.js'></script>
   <script src='keyboard.js'></script>
+  <script src='loop.js'></script>
 
   <script>
-    let worldWidth = 64;
-    let worldHeight = 64;
-    let width = worldWidth * 4;
-    let height = worldHeight * 4;
+    let worldWidth = 32;
+    let worldHeight = 32;
+    let width = worldWidth * 8;
+    let height = worldHeight * 8;
+    let viewWidth = 320;
+    let viewHeight = 200;
     
 
     world = new World(worldWidth, worldHeight);
     world.addBoundaries();
 
     world.addBox(10, 10, 'yellow');
-    world.addBox(60, 40, 'pink');
-    world.addBox(20, 50, 'purple');
+    world.addBox(20, 20, 'pink');
+    world.addBox(20, 30, 'purple');
     world.addBox(30, 30, 'orange');
 
-    observer = new Observer(width/2, height/2);
+    observer = new Observer(worldWidth/2-.5, worldHeight/2-.5);
     world.registerObserver(observer);
     keyboard = new Keyboard();
-    keyboard.hook(observer); 
-    tracer = new Tracer(width, height);
-    tracer.render(world);
-
-
+    tracer = new Tracer(viewWidth, viewHeight, world);
     miniMap = new MiniMap(width, height, world);
-    miniMap.draw();
-    keyboard.hook(miniMap);
 
     document.body.append(tracer.getDom());
     document.body.append(miniMap.getDom());
+
+
+    function gameLoop() {
+      world.step();
+      miniMap.render();
+    }
+   
+    function renderLoop() {
+      tracer.render();
+    }
+
+    gameLooper = new Loop(60); 
+    gameLooper.registerCallback(gameLoop);
+    gameLooper.run();
+    renderLooper = new Loop(10); 
+    renderLooper.registerCallback(renderLoop);
+    renderLooper.run();
   </script>
 
 </body>

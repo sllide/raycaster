@@ -8,14 +8,21 @@ class MiniMap {
     this.c2d = this.canvas.getContext('2d');
   }
 
-  draw() {
+  render() {
     var grid = this.world.getGrid();
     this.c2d.fillStyle = 'black';
     this.c2d.fillRect(0,0,this.width,this.height);
     
     var xMult = this.width / grid.length;
     var yMult = this.height / grid[0].length;
+    //draw grid
+    this.c2d.fillStyle = 'grey';
+    for(var i=0;i<this.width;i+=8){
+      this.c2d.fillRect(i,0,1,this.height);
+      this.c2d.fillRect(0,i,this.width,1);
+    }
     
+    //draw boxes    
     for(var x=0;x<grid.length;x++) {
       for(var y=0;y<grid[x].length;y++){
         var cell = grid[x][y];
@@ -41,14 +48,11 @@ class MiniMap {
     this.c2d.fill();
     
     this.c2d.strokeStyle = 'white';
+    this.c2d.lineWidth = 2;
     this.c2d.beginPath();
     this.c2d.moveTo(pos.x, pos.y);
-    this.c2d.lineTo(pos.x + (Math.sin(rotation / 180 * Math.PI)*20),pos.y + (Math.cos(rotation / 180 * Math.PI)*20));
+    this.c2d.lineTo(pos.x + (Math.sin(rotation / 180 * Math.PI)*10),pos.y + (Math.cos(rotation / 180 * Math.PI)*10));
     this.c2d.stroke();
-  }
-
-  press(key){
-    this.draw();
   }
 
   getDom() {

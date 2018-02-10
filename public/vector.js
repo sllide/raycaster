@@ -4,14 +4,30 @@ class Vector2D {
     this.y = y;
   }
 
-  add(angle, multiplier) {
-    this.x += Math.sin(this.radians(angle))*multiplier;
-    this.y += Math.cos(this.radians(angle))*multiplier;
+  add(vector) {
+    this.x += vector.x;
+    this.y += vector.y;
   }
 
-  radians(degrees) {
-    return degrees * Math.PI / 180;
+  addNumber(val) {
+    this.x += val;
+    this.y += val;
   }
 
-  getVector(){return {x:this.x,y:this.y};}
+  sub(vector) {
+    this.x -= vector.x;
+    this.y -= vector.y;
+  }
+
+  mul(vector) {
+    this.x *= vector.x;
+    this.y *= vector.y;
+  }
+
+  mulNumber(val) {
+    this.x *= val;
+    this.y *= val;
+  
+  }
+  getSum(){return this.x + this.y;}
 }
