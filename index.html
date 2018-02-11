@@ -1,1 +1,53 @@
-the raycaster can be found <a href='public/index.html'>here</a>.
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Raycaster</title>
+    <meta name="description" content="A javascript raycaster">
+    <meta name="author" content="Jari Stephan">
+    <script src="engine/engine.js"></script>
+    <script src="engine/world.js"></script>
+    <script src="engine/vector.js"></script>
+    <script src="engine/camera.js"></script>
+    <script src="engine/tracer.js"></script>
+    <script src="engine/view.js"></script>
+    
+    <script src="worldbuilder.js"></script>
+    <script src="loop.js"></script>
+    <script src="input.js"></script>
+  </head>
+
+  <body>
+    <script>
+      let gameWidth = gameHeight = 32;
+    </script>
+    <script>
+      let world = new World(gameWidth, gameHeight);
+      let worldBuilder = new WorldBuilder(world);
+      worldBuilder.createBoundary();
+      
+      for(var i=0;i<5;i++) {
+        worldBuilder.createWall(5+i,5,'gold');
+        worldBuilder.createWall(11,11+i,'brown');
+      }
+      
+      let camera = new Camera(10.5,10.5,1,0);
+      let engine = new Engine(world, camera);
+    
+      let input = new Input();
+
+      function loop() {
+        input.process(camera);
+        engine.step();
+      }
+      
+      let looper = new Loop(15);
+      looper.registerCallback(loop);
+      looper.run();
+
+      document.body.append(engine.getTracerCanvas());
+      document.body.append(engine.getDebugCanvas());
+    </script>
+  </body>
+</html>
