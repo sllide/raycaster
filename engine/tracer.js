@@ -58,12 +58,9 @@ class Tracer {
     if(side == 0) rayLength = (mapPos.x - camPos.x + (1-stepX) / 2) / rayDir.x;
     else          rayLength = (mapPos.y - camPos.y + (1-stepY) / 2) / rayDir.y;
 
-    var hitPos = camPos.clone();
-    hitPos.sub(mapPos);
-
     return {
       x: x,
-      hit: hitPos,
+      hit: mapPos,
       distance: rayLength,
       color: cell.color,
     };
