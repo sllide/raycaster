@@ -3,6 +3,12 @@ class WorldBuilder {
     this.world = world;
   }
 
+  createMirror(x,y,color = false) {
+    if(!color) color = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
+    var cell = this.world.createCell(World.cellTypes.mirror, color);
+    this.world.storeCell(x,y, cell);
+  }
+
   createWall(x,y,color = false) {
     if(!color) color = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
     var cell = this.world.createCell(World.cellTypes.wall, color);

@@ -11,7 +11,8 @@
     <script src="engine/vector.js"></script>
     <script src="engine/camera.js"></script>
     <script src="engine/tracer.js"></script>
-    <script src="engine/view.js"></script>
+    <script src="engine/tracerview.js"></script>
+    <script src="engine/debugview.js"></script>
     
     <script src="worldbuilder.js"></script>
     <script src="loop.js"></script>
@@ -31,19 +32,24 @@
         worldBuilder.createWall(5+i,5,'gold');
         worldBuilder.createWall(11,11+i,'brown');
       }
-      
+
+      for(var i=0;i<15;i++) {
+        worldBuilder.createWall(gameWidth-15+i, gameHeight-15);
+        worldBuilder.createWall(gameWidth-15, gameHeight-15+i);
+      }
+      worldBuilder.createMirror(gameWidth-7,gameHeight-7);
+
       let camera = new Camera(10.5,10.5,1,0);
       let engine = new Engine(world, camera);
     
       let input = new Input();
 
-      function loop() {
-        input.process(camera);
+      function loop(delta) {
+        input.process(camera, delta);
         engine.step();
       }
-      
-      let looper = new Loop(15);
-      looper.registerCallback(loop);
+
+      let looper = new Loop(loop);
       looper.run();
 
       document.body.append(engine.getTracerCanvas());

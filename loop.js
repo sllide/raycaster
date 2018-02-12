@@ -1,32 +1,24 @@
 class Loop {
-  constructor(fps) {
-    this.interval = 1000/fps;
-  }
-
-  registerCallback(callback) {
+  constructor(callback) {
     this.callback = callback;
   }
 
   run() {
-    this.then = Date.now();
-    this.start = this.then;
+    this.then = performance.now();
     this.looping = true;
-    this.loop();
+    requestAnimationFrame(this.loop.bind(this));
   }
 
   stop() {
     this.looping = false;
   }
 
-  loop() {
+  loop(now) {
+    var dt = now - this.then;
+    this.then = now;
+    this.callback(dt/1000);
     if(this.looping) {
       requestAnimationFrame(this.loop.bind(this));
-    }
-    this.now = Date.now();
-    this.elapsed = this.now - this.then;
-    if(this.elapsed > this.interval) {
-      this.then = this.now - (this.elapsed % this.interval);
-      this.callback();
     }
   }
 }

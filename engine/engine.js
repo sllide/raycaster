@@ -2,26 +2,15 @@ class Engine {
   constructor(world, camera) {
     this.world = world;
     this.camera = camera;
-    this.constructViews();
-    this.tracer = new Tracer(this.world, this.camera, this.view, this.debugView);
-  }
-
-  constructViews() {
-    this.view = new View(640,400);
-    this.view.setClearColor('black');
-    this.view.clear();
-
-    this.debugView = new View(32*16,32*16);
-    this.debugView.setClearColor('black');
-    this.debugView.clear();
+    this.tracer = new Tracer();
+    this.view = new TraceView(320,200,2,'black');
+    this.debugView = new DebugView(400,400);
   }
   
   step() {
-    this.tracer.trace();
-    this.view.clear();
-    this.tracer.buildView();
-    this.debugView.clear();
-    this.tracer.buildDebugView();
+    var rays = this.tracer.trace(this.world, this.camera, this.view.width);
+    this.view.build(rays);
+    this.debugView.build(this.world, this.camera, rays);
   }
 
   getTracerCanvas() {return this.view.getCanvas();}
