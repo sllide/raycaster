@@ -1,20 +1,16 @@
+//helper class that fills the world
 class WorldBuilder {
   constructor(world) {
     this.world = world;
   }
 
-  createMirror(x,y,color = false) {
-    if(!color) color = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
-    var cell = this.world.createCell(World.cellTypes.mirror, color);
-    this.world.storeCell(x,y, cell);
+  //create a single cell
+  createWall(x,y) {
+    var type = Math.floor(Math.random()*3+1);
+    this.world.storeCell(x, y, {type:type});
   }
 
-  createWall(x,y,color = false) {
-    if(!color) color = '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
-    var cell = this.world.createCell(World.cellTypes.wall, color);
-    this.world.storeCell(x,y, cell);
-  }
-
+  //create walls that surround the world
   createBoundary() {
     var worldSize = this.world.getWorldSize();
     var x = 0;

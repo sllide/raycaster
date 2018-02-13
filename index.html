@@ -11,49 +11,38 @@
     <script src="engine/vector.js"></script>
     <script src="engine/camera.js"></script>
     <script src="engine/tracer.js"></script>
-    <script src="engine/tracerview.js"></script>
-    <script src="engine/debugview.js"></script>
+    <script src="engine/view.js"></script>
     
     <script src="worldbuilder.js"></script>
     <script src="loop.js"></script>
-    <script src="input.js"></script>
+    <script src="key.js"></script>
+    <script src="player.js"></script>
   </head>
 
   <body>
     <script>
-      let gameWidth = gameHeight = 32;
-    </script>
-    <script>
-      let world = new World(gameWidth, gameHeight);
-      let worldBuilder = new WorldBuilder(world);
-      worldBuilder.createBoundary();
+      var world = new World(32,32);
+      var builder = new WorldBuilder(world);
+      builder.createBoundary();
+      for(var i=0;i<10;i++) {
+        builder.createWall(10+i,10);
+        builder.createWall(10,10+i);
+      }
+      var engine = new Engine();
+      var player = new Player(3.5,3.5,0,engine.createCamera(60));
+      var view = engine.createView(640,400);
       
-      for(var i=0;i<5;i++) {
-        worldBuilder.createWall(5+i,5,'gold');
-        worldBuilder.createWall(11,11+i,'brown');
-      }
+      engine.setWorld(world);
+      
+      document.body.append(view.getDOM());
 
-      for(var i=0;i<15;i++) {
-        worldBuilder.createWall(gameWidth-15+i, gameHeight-15);
-        worldBuilder.createWall(gameWidth-15, gameHeight-15+i);
-      }
-      worldBuilder.createMirror(gameWidth-7,gameHeight-7);
-
-      let camera = new Camera(10.5,10.5,1,0);
-      let engine = new Engine(world, camera);
-    
-      let input = new Input();
-
-      function loop(delta) {
-        input.process(camera, delta);
-        engine.step();
+      function loop(dt) {
+        player.step(dt);
+        engine.render();
       }
 
       let looper = new Loop(loop);
       looper.run();
-
-      document.body.append(engine.getTracerCanvas());
-      document.body.append(engine.getDebugCanvas());
     </script>
   </body>
 </html>

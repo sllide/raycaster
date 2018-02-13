@@ -1,70 +1,63 @@
 class Tracer {
-  trace(world, camera, length) {
+  
+  //start firing rays into the world
+  //and return their findings
+  trace(world, camera, view) {
     var rays = new Array();
-    for(var x=0;x<length;x++) {
-      rays.push(this.traceLine(x, length, world, camera));
+    var pos = camera.getPos();
+    var fov = camera.getFov();
+    for(var x=0;x<view.width;x++) {
+      //get the ray direction relative to the camera view
+      var dir = camera.getDir()-fov/2+x*(fov/view.width);
+      var ray = this.shootRay(pos, dir, world);
+      
+      //fisheye correction
+      //TODO: it doesnt completely fix the distortion but its barely noticable
+      //https://stackoverflow.com/questions/24173966/raycasting-engine-rendering-creating-slight-distortion-increasing-towards-edges
+      ray.distance *= Math.cos((x / view.width * fov - fov/2) * Math.PI / 180);
+      
+      rays.push(ray);
     }
     return rays;
   }
   
-  traceLine(offset, length, world, camera) {
-    var camPos = camera.getPos();
-    var rayDir = camera.getPlane().clone();
-    var camX = 2*offset/length-1;
-    rayDir.mul(new Vector2d(camX, camX));
-    rayDir.add(camera.getDir());
-    
-    //get the cell width and height
-    var cellDistX = Math.abs(1 / rayDir.x);
-    var cellDistY = Math.abs(1 / rayDir.y);
+  //conjure black magic
+  shootRay(pos, dir, world) {
+    //calculate initial variables
+    var rayDir = new Vector2(Math.sin(dir * Math.PI / 180),Math.cos(dir * Math.PI / 180));
+    var mapPos = new Vector2(Math.floor(pos.x),Math.floor(pos.y));
+    var rayDist = new Vector2();
+    var gridDist = new Vector2(Math.abs(1/rayDir.x),Math.abs(1/rayDir.y));
+    var step = new Vector2();
 
-    //calculate initial values
-    var mapPos = new Vector2d(Math.floor(camPos.x),Math.floor(camPos.y));
-    var stepX = (rayDir.x < 0) ? -1 : 1;
-    var stepY = (rayDir.y < 0) ? -1 : 1;
-    var rayDistX = (rayDir.x < 0 ? (camPos.x - mapPos.x) : (mapPos.x + 1 - camPos.x)) * cellDistX;
-    var rayDistY = (rayDir.y < 0 ? (camPos.y - mapPos.y) : (mapPos.y + 1 - camPos.y)) * cellDistY;
+    var side = 0;
 
-    var side;
-    var cell;
+    step.x = rayDir.x < 0 ? -1 : 1;
+    step.y = rayDir.y < 0 ? -1 : 1;
 
-    //loop until ray hits something
+    rayDist.x = (rayDir.x < 0 ? (pos.x - mapPos.x) : (mapPos.x + 1 - pos.x)) * gridDist.x;
+    rayDist.y = (rayDir.y < 0 ? (pos.y - mapPos.y) : (mapPos.y + 1 - pos.y)) * gridDist.y;
+
     while(true) {
-      if(rayDistX < rayDistY) {
-        rayDistX += cellDistX;
-        mapPos.x += stepX;
+      if(rayDist.x < rayDist.y) {
+        rayDist.x += gridDist.x;
+        mapPos.x += step.x;
         side = 0;
       } else {
-        rayDistY += cellDistY;
-        mapPos.y += stepY;
+        rayDist.y += gridDist.y;
+        mapPos.y += step.y;
         side = 1;
       }
-      cell = world.getCell(mapPos.x,mapPos.y); 
+      var cell = world.getCell(mapPos.x,mapPos.y);
+      if(cell.type != 0) { break; }
 
-      if(cell['type'] === World.cellTypes.wall || cell['type'] === World.cellTypes.invalid) {
-        break;
-      }
-      if(cell['type'] === World.cellTypes.mirror) {
-        if(side == 0) stepY = -stepX;
-        else          stepX = -stepY;
-      }
     }
 
-    var rayLength;
-    if(side == 0) rayLength = (mapPos.x - camPos.x + (1-stepX) / 2) / rayDir.x;
-    else          rayLength = (mapPos.y - camPos.y + (1-stepY) / 2) / rayDir.y;
-
-    var hitPos = rayDir.clone();
-    hitPos.x *= rayLength;
-    hitPos.y *= rayLength;
-    hitPos.add(camPos);
-   
-    var hitArray = new Array();
+    if (side == 0) var distance = (mapPos.x - pos.x + (1 - step.x) / 2) / rayDir.x;
+    else           var distance = (mapPos.y - pos.y + (1 - step.y) / 2) / rayDir.y;
 
     return {
-      offset: offset,
-      hitPos: hitPos,
-      rayLength: rayLength,
+      distance: distance,
       cell: cell,
     };
   }

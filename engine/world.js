@@ -1,40 +1,26 @@
+//holds all world data
+//the world itself is a 2d array with every unit having a fixed with of 1x1
 class World {
   constructor(width, height) {
-    this.size = new Vector2d(width, height);
-    this.grid = new Array(width*height).fill(this.createCell(World.cellTypes.empty,'black'));
+    this.size = new Vector2(width, height);
+    this.grid = new Array(width*height).fill({type:0});
   }
 
   storeCell(x,y,cell) {
     this.grid[this.size.x*y+x] = cell;
   }
 
-  createCell(type, color) {
-    return {
-      type: type,
-      color: color,
-    };
-  }
-
   getCell(x,y) {
     var offset = this.size.x*y+x;
     if(offset>=0&&offset<this.grid.length) {
-      return this.grid[offset];
+      if(x>=0&&x<this.size.x&&y>=0&&y<this.size.y) {
+        return this.grid[offset];
+      }
     }
-    return this.createCell(World.cellTypes.invalid,'black');
-  }
-
-  getGridSize() {
-    return this.grid.length;
+    return {type:-1};
   }
 
   getWorldSize() {
     return this.size.clone();
   }
 }
-
-World.cellTypes = Object.freeze({
-  invalid: -1,
-  empty: 0,
-  wall: 1,
-  mirror: 2,
-});
