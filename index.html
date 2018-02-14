@@ -12,6 +12,7 @@
     <script src="engine/camera.js"></script>
     <script src="engine/tracer.js"></script>
     <script src="engine/view.js"></script>
+    <script src="engine/rayview.js"></script>
     
     <script src="worldbuilder.js"></script>
     <script src="loop.js"></script>
@@ -29,13 +30,13 @@
         builder.createWall(10,10+i);
       }
       var engine = new Engine();
-      var player = new Player(3.5,3.5,0,engine.createCamera(60));
-      var view = engine.createView(640,400);
-      
+      var player = new Player(3.5,3.5,0,engine.createCamera(66));
+      var view = engine.createView(640,360);
+      var rayView = engine.createRayView(400,400);      
       engine.setWorld(world);
       
       document.body.append(view.getDOM());
-
+      document.body.append(rayView.getDOM());
       function loop(dt) {
         player.step(dt);
         engine.render();

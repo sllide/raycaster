@@ -15,7 +15,6 @@ class Tracer {
       //TODO: it doesnt completely fix the distortion but its barely noticable
       //https://stackoverflow.com/questions/24173966/raycasting-engine-rendering-creating-slight-distortion-increasing-towards-edges
       ray.distance *= Math.cos((x / view.width * fov - fov/2) * Math.PI / 180);
-      
       rays.push(ray);
     }
     return rays;
@@ -57,6 +56,7 @@ class Tracer {
     else           var distance = (mapPos.y - pos.y + (1 - step.y) / 2) / rayDir.y;
 
     return {
+      rotation: dir,
       distance: distance,
       cell: cell,
     };

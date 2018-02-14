@@ -16,6 +16,11 @@ class Engine {
     this.view = new View(width,height);  
     return this.view;
   }
+  
+  createRayView(width, height) {
+    this.rayView = new RayView(width,height);  
+    return this.rayView;
+  }
 
   render() {
     if(!this.view) throw new Error("No view created");
@@ -23,5 +28,6 @@ class Engine {
     if(!this.world) throw new Error("No world defined");
     var result = this.tracer.trace(this.world, this.camera, this.view);
     this.view.build(result);
+    if(this.rayView) this.rayView.build(result);
   }
 }
