@@ -8,11 +8,12 @@ class View {
     this.view.getContext('2d').imageSmoothingEnabled = false;
     this.view.width = width;
     this.view.height = height;
+    this.textureLoader = new TextureLoader();
   }
 
   //visualize ray data
   build(rays) {
-    var ctx = this.view.getContext('2d');
+    var ctx = this.view.getContext('2d',{alpha: false});
   
     //clear the screen
     ctx.fillStyle = "black";
@@ -23,26 +24,17 @@ class View {
       var ray = rays[x];
 
       //figure out line height relative to view dimention
-      var yOffset = this.height / 2 - (this.height / ray.distance / 2);
-      var yLength = this.height / ray.distance;
-      
-      ctx.fillStyle = this.getColor(ray.cell.type);
-      ctx.fillRect(x, yOffset, 1, yLength);
+      var yOffset = this.height / 2 - (this.height / ray.distance.corrected / 2);
+      var yLength = this.height / ray.distance.corrected;
+     
+      var tex = this.textureLoader.getTexture(ray.cell.type);
+      if(tex != false) {
+        ctx.drawImage(tex,ray.localOffset*64,0,1,64,x,yOffset,1,yLength);
+      }
+      //ctx.fillStyle = "rgb("+(20*ray.cell.type+100)+",0,0)";
+      //ctx.fillRect(x,yOffset,1,yLength);
     }
-  }
 
-  //TODO swap this with textures
-  getColor(i) {
-    switch(i) {
-      case 1:
-        return 'blue';
-      case 2:
-        return 'red';
-      case 3:
-        return 'yellow';
-      default:
-        return 'grey';
-    }
   }
 
   getDOM(){return this.view;}

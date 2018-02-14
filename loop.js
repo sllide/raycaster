@@ -14,11 +14,15 @@ class Loop {
   }
 
   loop(now) {
-    var dt = now - this.then;
+    this.dt = (now - this.then) / 1000;
     this.then = now;
-    this.callback(dt/1000);
+    this.callback(this.dt);
     if(this.looping) {
       requestAnimationFrame(this.loop.bind(this));
     }
+  }
+
+  getFps() {
+    return Math.round(1/(this.dt));
   }
 }
